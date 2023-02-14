@@ -26,5 +26,7 @@ public class ServidorTarefas {
             // threadCliente.start();
             threadPool.execute(distribuirTarefas);
         }
+
+        servidor.close();
     }
 }
