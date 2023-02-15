@@ -5,28 +5,49 @@ import br.com.alura.tarefas.DistribuirTarefas;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServidorTarefas {
-    public static void main(String[] args) throws IOException {
 
+    private ServerSocket servidor;
+    private ExecutorService threadPool;
+    private boolean estaRodando;
+
+    public ServidorTarefas() throws IOException {
         System.out.println("--- Iniciando servidor ---");
-        ServerSocket servidor = new ServerSocket(12345);
+        this.servidor = new ServerSocket(12345);
+        this.threadPool = Executors.newCachedThreadPool();
+        this.estaRodando = true;
+    }
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    public static void main(String[] args) throws Exception {
 
-        while (true) {
-            Socket socket = servidor.accept();
-            System.out.println("Aceitando novo cliente na porta " + socket.getPort());
+        ServidorTarefas servidor = new ServidorTarefas();
+        servidor.rodar();
+        servidor.parar();
+    }
 
-            DistribuirTarefas distribuirTarefas = new DistribuirTarefas(socket);
-            // Thread threadCliente = new Thread(distribuirTarefas);
-            // threadCliente.start();
-            threadPool.execute(distribuirTarefas);
+    public void parar() throws IOException {
+        estaRodando = false;
+        servidor.close();
+        threadPool.shutdown();
+        System.exit(0);
+    }
+
+    public void rodar() throws IOException {
+        while (this.estaRodando) {
+            try {
+                Socket socket = servidor.accept();
+                System.out.println("Aceitando novo cliente na porta " + socket.getPort());
+                DistribuirTarefas distribuirTarefas = new DistribuirTarefas(socket, this);
+                threadPool.execute(distribuirTarefas);
+            } catch (SocketException e) {
+                e.printStackTrace();
+                System.out.println("SocketException, Está rodando? " + this.estaRodando);
+            }
         }
-
-        //servidor.close();
     }
 }
