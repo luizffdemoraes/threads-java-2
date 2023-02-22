@@ -18,7 +18,9 @@ public class ComandoC2 implements Runnable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        saida.println("Comando c2 executado com sucesso!");
+
+        throw new RuntimeException("Exception no comando c2");
+        //saida.println("Comando c2 executado com sucesso!");
 
     }
 }
