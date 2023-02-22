@@ -13,7 +13,7 @@ public class ComandoC1 implements Runnable {
     public void run() {
         System.out.println("Executando comando C1");
         try {
-            Thread.sleep(20000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

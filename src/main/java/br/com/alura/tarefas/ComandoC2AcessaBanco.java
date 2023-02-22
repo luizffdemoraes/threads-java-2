@@ -17,7 +17,7 @@ public class ComandoC2AcessaBanco implements Callable<String> {
         saida.println("Servidor recebeu comando c2 - Banco");
         saida.println("Executando comando C2 - Banco");
 
-        Thread.sleep(20000);
+        Thread.sleep(15000);
 
         int numero = new Random().nextInt(100) + 1;
 

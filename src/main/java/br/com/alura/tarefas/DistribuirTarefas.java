@@ -46,6 +46,7 @@ public class DistribuirTarefas implements Runnable {
                         Future<String> futureWS = this.theadPool.submit(c2WS);
                         Future<String> furureBanco = this.theadPool.submit(c2Banco);
 
+                        this.theadPool.submit(new JuntaResultadosFutureWSAndFutureBanco(futureWS, furureBanco, saidaCliente));
                         String resultadoWS = futureWS.get();
                         break;
                     }
