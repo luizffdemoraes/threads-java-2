@@ -2,19 +2,20 @@ package br.com.alura.tarefas;
 
 import br.com.alura.servidor.ServidorTarefas;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
 
 public class DistribuirTarefas implements Runnable {
+    private final ExecutorService theadPool;
     private Socket socket;
     private ServidorTarefas servidor;
 
-    public DistribuirTarefas(Socket socket, ServidorTarefas servidor) {
+    public DistribuirTarefas(Socket socket, ServidorTarefas servidor, ExecutorService threadPool) {
         this.socket = socket;
         this.servidor = servidor;
+        this.theadPool = threadPool;
     }
 
     @Override
@@ -33,10 +34,13 @@ public class DistribuirTarefas implements Runnable {
 
                     case "c1": {
                         saidaCliente.println("Confirmação comando c1");
+                        ComandoC1 comandoC1 = new ComandoC1(saidaCliente);
+                        this.theadPool.execute(comandoC1);
                         break;
                     }
                     case "c2": {
                         saidaCliente.println("Confirmação comando c2");
+                        ComandoC2 comandoC2 = new ComandoC2(saidaCliente);
                         break;
                     }
                     case "fim": {
